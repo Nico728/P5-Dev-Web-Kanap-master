@@ -1,26 +1,46 @@
-// Faire le lien entre un produit de la page d’accueil et la page Produit
+// Récupération de l'id via les paramètres de l'url
 
-const searchParams = new URLSearchParams(document.location.search);
-const id = searchParams.get("_id");
-console.log(id);
+const searchParams = new URLSearchParams(window.location.search);
+const urlId = searchParams.get("id");
+console.log(searchParams);
 
-//récupération des produits
+// Récupération des détails du produit
 
-fetch('http://localhost:3000/api/products/${id}')
-.then(function(res) {
-  if (res.ok) {
-    return res.json();
-  }
-})
-.then(function(value) {
-  let descriptionCanape = document.getElementById('description');
-  let prixCanape = document.getElementById('prix');
-  let imageCanape = document.createElement('img');
-  let titreCanape = document.querySelector('title');
-  
-})
+fetch("http://localhost:3000/api/products/")
+    .then(function(res) {
+        if(res.ok) {
+            console.log(res.json);
+            return res.json();
+        }
+    })
+    .then(function(data) {
+        // Affichage du titre, du nom, de l'image, du prix, de la description, de la couleur
+        const titre = document.querySelector("title");
+        titre.innerText = data.name;
 
-.catch(function(err) {
-  console.log("erreur 404, sur ressource api :" + err);
-  document.querySelector("titles").innerHTML = "<h1> erreur 404, not found</h1>";
-});
+        const titreH1 = document.querySelector("#title");
+        titreH1.innerText = data.name;
+
+        const imageCanape = document.createElement("img");
+        imageCanape.src = data.imageUrl;
+        imageCanape.alt = data.altTxt;
+        const canapeImage = document.querySelector(".item__img");
+        canapeImage.appendChild(imageCanape);
+
+        const prixCanape = document.querySelector("#price");
+        const prix = data.price;
+        prixCanape.innerText = prix;
+
+        const descriptionCanape = document.querySelector("#description");
+        descriptionCanape.innerText = data.description;
+
+        const couleurCanape = document.querySelector("#colors");
+        const couleur = data.colors;
+        for (let i = 0; i < couleur.length; i++) {
+            const couleurDuCanape = couleur[i];
+            const optionCouleur = document.createElement("option");
+            optionCouleur.textContent = couleurDuCanape;
+            optionCouleur.value = couleurDuCanape;
+            couleurCanape.appendChild(optionCouleur);
+        }
+    })
