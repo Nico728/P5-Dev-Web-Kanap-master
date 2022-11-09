@@ -24,7 +24,7 @@ function kanaps(value) {
       // création de la balise a
       let lienItems = document.createElement("a");
       document.querySelector("#items").appendChild(lienItems);
-      lienItems.href = "./product.html?_id=${value[i]._id}";
+      lienItems.href = "./product.html?_id=" + value[i]._id;
       
       //création de la balise article
       let articleItems = document.createElement("article");

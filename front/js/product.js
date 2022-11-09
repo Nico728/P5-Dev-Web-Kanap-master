@@ -1,12 +1,12 @@
 // Récupération de l'id via les paramètres de l'url
 
 const searchParams = new URLSearchParams(window.location.search);
-const urlId = searchParams.get("id");
-console.log(searchParams);
+const urlId = searchParams.get("_id");
+console.log(urlId);
 
 // Récupération des détails du produit
 
-fetch("http://localhost:3000/api/products/")
+fetch("http://localhost:3000/api/products/" + urlId)
     .then(function(res) {
         if(res.ok) {
             console.log(res.json);
@@ -43,4 +43,6 @@ fetch("http://localhost:3000/api/products/")
             optionCouleur.value = couleurDuCanape;
             couleurCanape.appendChild(optionCouleur);
         }
+
+        // Ajout du bouton
     })
