@@ -67,21 +67,22 @@ fetch("http://localhost:3000/api/products/" + urlId)
                     image: data.imageUrl,
                     altImg: data.altTxt,
                 };
-                let panier = [];
-                ajoutPanier(canape,panier);
+                ajoutPanier(canape);
             }
         });
     });
 
-function ajoutPanier(canape,panier) {
+function ajoutPanier(canape) {
     console.log(canape)
+    // stockage de la clé panier dans la valeur canapé en chaîne de caractère
     localStorage.setItem("panier", JSON.stringify(canape));
-    panier = JSON.parse(localStorage.getItem("panier"));
-    let produitIdentique = panier.find(p => p.id == canape.id && p.quantity == canape.quantity && p.color == canape.color);
-    if (produitIdentique != undefined) {
-        panier.push(canape);
-    } else {
-        produitIdentique.quantity += canape.quantity;
-    }
+    // création tableau vide panier
+    let panier = [];
+    console.log("le panier", panier);
+    // récupération du panier dans le localstorage
+    panier = localStorage.getItem("panier");
+    // ajout de l'id, de la quantité et de la couleur dans le panier
+
 }
 
+// panier = JSON.parse(localStorage.getItem("panier"));
