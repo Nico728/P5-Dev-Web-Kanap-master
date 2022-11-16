@@ -58,15 +58,8 @@ fetch("http://localhost:3000/api/products/" + urlId)
                 alert("Veuillez sélectionner une quantité");
             } 
             else {
-                let cart = [];
-                if (localStorage.getItem("cart")) {
-                    cart = JSON.parse(localStorage.getItem("cart"));
-                }
-                
-                // Entrée objet pour chaque article ajouté au panier
-
                 let canape = {
-                    idCanape: ID,
+                    id: data._id,
                     name: data.name,
                     color: choixCouleur,
                     quantity: Number(quantiteCanape),
@@ -74,21 +67,21 @@ fetch("http://localhost:3000/api/products/" + urlId)
                     image: data.imageUrl,
                     altImg: data.altTxt,
                 };
-
-                // Gestion de l'ajout de produits identiques
-                let foundProduct = cart.find((p) => p.id === canape.id && p.name === canape.name && p.color === canape.color);
-
-                if (foundProduct === undefined) {
-                    cart.push(canape);
-                } else {
-                    foundProduct.quantity += canape.quantity;
-                }
-                // Fin de gestion
-
-                localStorage.setItem("cart", JSON.stringify(cart));
-
-                alert("Votre produit a été ajouté au panier");
-                window.location.href = "./cart.html";
+                let panier = [];
+                ajoutPanier(canape,panier);
             }
         });
     });
+
+function ajoutPanier(canape,panier) {
+    console.log(canape)
+    localStorage.setItem("panier", JSON.stringify(canape));
+    panier = JSON.parse(localStorage.getItem("panier"));
+    let produitIdentique = panier.find(p => p.id == canape.id && p.quantity == canape.quantity && p.color == canape.color);
+    if (produitIdentique != undefined) {
+        panier.push(canape);
+    } else {
+        produitIdentique.quantity += canape.quantity;
+    }
+}
+
