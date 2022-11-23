@@ -83,72 +83,19 @@ function bouton(data) {
 
 // Fonction Local Storage
 function verifieContenuStorage(canape) {
-    console.log(canape);
-    // création tableau storage
-    let tableauStorage = [];
-    // lecture du localstorage
-    if (localStorage.getItem("panier")) {
-    tableauStorage = JSON.parse(localStorage.getItem("panier"));
-    }
-    //tableauStorage = {canape}
-    //tableauStorage = Object.keys(canape).map(canape);
-    console.log(tableauStorage);
-    if (tableauStorage == null){
-        tableauStorage = localStorage.setItem(canape.id, JSON.stringify(canape));
-        console.log(tableauStorage)
-    }else{  
-        console.log(canape.id)
-        console.log(tableauStorage.id)
-        console.log(tableauStorage.color)
-        console.log(canape)
-        if(canape.id == tableauStorage.id && canape.color == tableauStorage.color){
-            console.log("Ca existe déjà")
-            tableauStorage.quantity = tableauStorage.quantity + canape.quantity
-        }else{
-            console.log("Ca n'existe pas")
-            tableauStorage.quantity += canape.quantity
-            localStorage.setItem(canape.id, JSON.stringify(canape));
-            console.log(tableauStorage);
-        }
-    }
-}
-/*function ajoutPanier(canape) {
-    console.log(canape)
-    // stockage de la clé panier dans la valeur canapé en chaîne de caractère
-    localStorage.setItem("panier", JSON.stringify(canape));
-    // création tableau vide panier
-    let panier = [];
-    console.log("le panier", panier);
-    // récupération du panier dans le localstorage
-    panier = localStorage.getItem("panier");
-    // ajout de l'id, de la quantité et de la couleur dans le panier
-
-}
-
-// panier = JSON.parse(localStorage.getItem("panier"));
-//*
-
-function verifieContenuStorage(canape) {
-console.log(canape);
-let tableauStorage = [];
-
-tableauStorage = localStorage.getItem(canape.id);
-console.log(tableauStorage);
-if (tableauStorage == null){
-    localStorage.setItem(canape.id, JSON.stringify(canape));
-}else{  
-    console.log(canape.id)
-    console.log(tableauStorage.id)
-    console.log(tableauStorage)
-    console.log(canape)
-    if(canape.id == tableauStorage.id && canape.color == tableauStorage.color){
-        console.log("Ca existe déjà")
-        tableauStorage.quantity = tableauStorage.quantity + canape.quantity
+    // création variable qui lit le canape dans le local storage
+    let locaSto = localStorage.getItem(canape.id +";"+ canape.color);
+    //condition si la variable localSto est nul
+    if (locaSto == null){
+        // alors on stoke les cles id et colors en chaines de caractere du canape
+        localStorage.setItem(canape.id +";"+ canape.color, JSON.stringify(canape));
+        alert("article ajouté au panier");
+    //sinon 
     }else{
-        console.log("Ca n'existe pas")
-        tableauStorage.quantity = tableauStorage.quantity + canape.quantity
-        localStorage.setItem(canape.id, JSON.stringify(canape));
-        
+        // creation d'une variable qui parse la variable locaSto si id et la couleur sont deja selectionnée
+        let doubleArt = JSON.parse(locaSto);
+        doubleArt.quantity += canape.quantity;
+        localStorage.setItem(doubleArt.id +";"+ doubleArt.color, JSON.stringify(doubleArt));
+        alert("article ajouté au panier");
     }
 }
-}*/
