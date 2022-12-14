@@ -15,7 +15,6 @@ function recuperationLocalStorage() {
         const parseObjetAjoute = JSON.parse(objetAjoute);
         tableauObjet.push(parseObjetAjoute);
     }
-    console.log(tableauObjet);
 }
 
 // Fonction regroupant les balises html
