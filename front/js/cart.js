@@ -489,8 +489,8 @@ function calculPrix(obj) {
 let formulaire = document.querySelector(".cart__order__form");
 
 // création de regexp pour gérer le formulaire
-let adresseRegExp = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
-let prenomNomRegExp = new RegExp("^[A-zÀ-ú \-]+$");
+let adresseRegExp = new RegExp("^[A-zà-ú0-9 ,.'\-]+$");
+let prenomNomRegExp = new RegExp("^[A-zà-ú \-]+$");
 let emailRegExp = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
 
 // Champ Prénom
