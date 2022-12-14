@@ -10,14 +10,12 @@ tableauObjet.forEach((obj) => affichageCanape(obj));
 
 
 function recuperationLocalStorage() {
-    let nombreObjetAjoute = localStorage.length;
-    console.log("nombre de canapé :", nombreObjetAjoute);
-    for (let i = 0; i < nombreObjetAjoute; i++) {
+    for (let i = 0; i < localStorage.length; i++) {
         const objetAjoute = localStorage.getItem(localStorage.key(i));
         const parseObjetAjoute = JSON.parse(objetAjoute);
         tableauObjet.push(parseObjetAjoute);
-        console.log(tableauObjet)
     }
+    console.log(tableauObjet);
 }
 
 // Fonction regroupant les balises html
@@ -123,24 +121,33 @@ function calculPrix(obj) {
         positionDetail.appendChild(creationP);
         console.log("votre panier est vide")
     } else { 
-        console.log("votre panier contient des articles")
         // On gère la quantité
         let totalQ = 0;
         const totalQuantite = document.querySelector("#totalQuantity");
         tableauObjet.forEach((obj) => {
-            const calculTotalQuantite = totalQ + obj.quantity;
+            let calculTotalQuantite = totalQ + obj.quantity;
             totalQ = calculTotalQuantite;
         })
-        console.log(totalQ);
         totalQuantite.textContent = totalQ;
         // On gère le prix
-        let totalP = 0;
+        let prixTotalOgu = 0;
         const totalPrix = document.querySelector("#totalPrice");
         tableauObjet.forEach((obj) => {
-            const calculTotalPrix = obj.price * obj.quantity;
-            totalP += calculTotalPrix;
+            fetch("http://localhost:3000/api/products/" + obj.id)
+            .then(function(res) {
+                if(res.ok) {
+                    return res.json();
+                }
+            })
+            .then(function(obj) {
+                prixTotalOgu = prixTotalOgu + (obj.price * obj.quantity);
+                console.log(prixTotalOgu);
+            }); 
+            let calculTotalPrix = obj.price * obj.quantity;
+            console.log(prixTotalOgu)
+            totalP = calculTotalPrix;
         })
-        console.log(totalP);
+        console.log(prixTotalOgu);
         totalPrix.textContent = totalP;
     }
 }
@@ -173,6 +180,277 @@ function calculPrix(obj) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 // Formulaire
 
-const formulaire = document.querySelector(".cart__order__form");
+let formulaire = document.querySelector(".cart__order__form");
+
+// création de regexp pour gérer le formulaire
+let adresseRegExp = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
+let prenomNomRegExp = new RegExp("^[A-zÀ-ú \-]+$");
+let emailRegExp = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
+
+// Champ Prénom
+let prenom = document.querySelector('#firstNameErrorMsg');
+formulaire.firstName.addEventListener('change', function(e) {
+    let valeur = e.target.value;
+    if (prenomNomRegExp.test(valeur)){
+        prenom.textContent = '';
+    } else {
+        prenom.textContent = 'Erreur, vérifiez votre prénom.';
+    }
+});
+
+// Champ Nom
+let nom = document.querySelector('#lastNameErrorMsg');
+formulaire.lastName.addEventListener('change', function(e) {
+    let valeur = e.target.value;
+    if (prenomNomRegExp.test(valeur)){
+        nom.textContent = '';
+    } else {
+        nom.textContent = 'Erreur, vérifiez votre nom.';
+    }
+});
+
+// Champ Adresse
+let adresse = document.querySelector('#addressErrorMsg');
+formulaire.address.addEventListener('change', function(e) {
+    let valeur = e.target.value;
+    if (adresseRegExp.test(valeur)){
+        adresse.textContent = '';
+    } else {
+        adresse.textContent = 'Erreur, vérifiez votre adresse.';
+    }
+});
+
+// Champ Ville
+let ville = document.querySelector('#cityErrorMsg');
+formulaire.city.addEventListener('change', function(e) {
+    let valeur = e.target.value;
+    if (prenomNomRegExp.test(valeur)){
+        ville.textContent = '';
+    } else {
+        ville.textContent = 'Erreur, vérifiez votre ville.';
+    }
+});
+
+// Champ Email
+let email = document.querySelector('#emailErrorMsg');
+formulaire.email.addEventListener('change', function(e) {
+    let valeur = e.target.value;
+    if (emailRegExp.test(valeur)){
+        email.textContent = '';
+    } else {
+        email.textContent = 'Erreur, vérifiez votre email.';
+    }
+});
+
+
+// Bouton COMMANDER !
+
+const boutonCommander = document.querySelector("#order");
+
+boutonCommander.addEventListener('click', function(e) {
+    e.preventDefault();
+    let champPrenom = document.getElementById('firstName');
+    let champNom = document.getElementById('lastName');
+    let champAdresse = document.getElementById('address');
+    let champVille = document.getElementById('city');
+    let champEmail = document.getElementById('email');
+
+    if (tableauObjet == null) {
+        alert("Votre panier est vide");
+        e.preventDefault();
+    }
+    if (firstName.value === "" || lastName.value === "" || address.value === "" || city.value === "" || email.value === "") {
+        alert("Formulaire non rempli");
+        e.preventDefault();
+    }
+    if (prenomNomRegExp.test(champPrenom.value) ==  false || prenomNomRegExp.test(champNom.value) ==  false || adresseRegExp.test(champAdresse.value) ==  false || prenomNomRegExp.test(champVille.value) ==  false || emailRegExp.test(champEmail.value) ==  false) {
+        alert("Vérifiez vos données saisies dans le formulaire");
+        e.preventDefault();
+    }
+    else {
+        productID = []
+        for (let i = 0; i < localStorage.length; i++) {
+            const objetAjoute = localStorage.getItem(localStorage.key(i).id);
+            const parseObjetAjoute = JSON.parse(objetAjoute);
+            productID.push(parseObjetAjoute);
+        }
+
+        let objetFormulaire = {
+            contact : {
+                firstName: champPrenom.value,
+                lastName: champNom.value,
+                address: champAdresse.value,
+                city: champVille.value,
+                email: champEmail.value,
+            },
+        products: productID    
+        }
+
+        fetch("http://localhost:3000/api/products/order", {
+            method: 'POST',
+            body: JSON.stringify(order),
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'application/json' 
+                },
+            })
+            .then((response) => response.json())
+            .then(async function (resultatCommande) {
+                objetFormulaire = await resultatCommande;
+                document.location.href = "confirmation.html?orderId=" + objetFormulaire.orderId;
+                localStorage.clear();
+            })
+    }
+})
+*/
