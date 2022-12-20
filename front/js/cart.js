@@ -107,30 +107,18 @@ function affichageCanape(obj) {
     pSupp.classList.add("deleteItem");
     pSupp.textContent = "Supprimer";
     divSupp.appendChild(pSupp);
-
-    calculPrix(obj);
 }
+
 
 // Fonction qui permet de savoir si notre panier est vide, si il est vide alors on affiche panier vide sinon,
 // on gère la quantité et le prix
-function calculPrix(obj) {
+function calculQuantitePrix() {
     if (tableauObjet == null) {
         const creationP = document.createElement('p');
         creationP.textContent = 'Votre panier est vide';
         positionDetail.appendChild(creationP);
-        console.log("votre panier est vide")
     } else { 
-        // On gère la quantité
-        let totalQ = 0;
-        const totalQuantite = document.querySelector("#totalQuantity");
-        tableauObjet.forEach((obj) => {
-            let calculTotalQuantite = totalQ + obj.quantity;
-            totalQ = calculTotalQuantite;
-        })
-        totalQuantite.textContent = totalQ;
-        // On gère le prix
-        let prixTotalOgu = 0;
-        const totalPrix = document.querySelector("#totalPrice");
+        // On gère la quantité et le prix
         tableauObjet.forEach((obj) => {
             fetch("http://localhost:3000/api/products/" + obj.id)
             .then(function(res) {
@@ -138,18 +126,41 @@ function calculPrix(obj) {
                     return res.json();
                 }
             })
-            .then(function(obj) {
-                prixTotalOgu = prixTotalOgu + (obj.price * obj.quantity);
-                console.log(prixTotalOgu);
+            .then(function(cnp) {
+                afficheQuantitePrix(cnp)
+                console.log(cnp.price)
             }); 
-            let calculTotalPrix = obj.price * obj.quantity;
-            console.log(prixTotalOgu)
-            totalP = calculTotalPrix;
-        })
-        console.log(prixTotalOgu);
-        totalPrix.textContent = totalP;
+        }) 
     }
 }
+calculQuantitePrix();
+
+function afficheQuantitePrix(cnp) {
+    let totalQ = 0;
+    const totalQuantite = document.querySelector("#totalQuantity");
+    let prixTotalArticle = 0;
+    const totalPrix = document.querySelector("#totalPrice");
+
+    tableauObjet.forEach((obj) => {
+        totalQ = totalQ + obj.quantity;
+        prixTotalArticle = prixTotalArticle + (cnp.price * obj.quantity);
+        console.log(prixTotalArticle)
+        console.log(cnp.price)
+        console.log(obj.quantity)
+    })
+
+    totalPrix.textContent = prixTotalArticle;
+    totalQuantite.textContent = totalQ;
+}
+changeQuantitePrix()
+
+// Fonction pour modifier la quantité et le prix
+function changeQuantitePrix() {
+}
+
+
+        
+
 
 
 
