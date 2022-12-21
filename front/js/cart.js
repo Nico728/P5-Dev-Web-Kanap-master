@@ -128,7 +128,6 @@ function calculQuantitePrix() {
             })
             .then(function(cnp) {
                 afficheQuantitePrix(cnp)
-                console.log(cnp.price)
             }); 
         }) 
     }
@@ -140,15 +139,16 @@ function afficheQuantitePrix(cnp) {
     const totalQuantite = document.querySelector("#totalQuantity");
     let prixTotalArticle = 0;
     const totalPrix = document.querySelector("#totalPrice");
-
+    
     tableauObjet.forEach((obj) => {
         totalQ = totalQ + obj.quantity;
         prixTotalArticle = prixTotalArticle + (cnp.price * obj.quantity);
-        console.log(prixTotalArticle)
-        console.log(cnp.price)
-        console.log(obj.quantity)
+        console.log(obj)
+        console.log(cnp)
     })
-
+    console.log(prixTotalArticle)
+    console.log(cnp.price)
+        
     totalPrix.textContent = prixTotalArticle;
     totalQuantite.textContent = totalQ;
 }
