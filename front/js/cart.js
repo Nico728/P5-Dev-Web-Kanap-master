@@ -143,8 +143,6 @@ function afficheQuantitePrix(cnp) {
     tableauObjet.forEach((obj) => {
         totalQ = totalQ + obj.quantity;
         prixTotalArticle = prixTotalArticle + (cnp.price * obj.quantity);
-        console.log(obj)
-        console.log(cnp)
     })
     console.log(prixTotalArticle)
     console.log(cnp.price)
