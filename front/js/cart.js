@@ -132,7 +132,7 @@ function quantitePrix() {
             })
             .then(function(cnp) {
                 prixTotal = prixTotal + calculPrix(cnp, obj);
-                quantiteTotal = quantiteTotal + obj.quantity;
+                quantiteTotal = quantiteTotal + calculQuantite(obj);
                 affichageQuantitePrix(prixTotal, quantiteTotal)
             }); 
         }) 
@@ -145,6 +145,13 @@ function calculPrix(cnp, obj) {
     let prixTotalArticle = 0; 
     prixTotalArticle = cnp.price * obj.quantity;
     return prixTotalArticle;
+}
+
+// Fonction calcul quantité
+function calculQuantite(obj) {
+    let quantiteTotalArticle = 0;
+    quantiteTotalArticle = quantiteTotalArticle + obj.quantity;
+    return quantiteTotalArticle;
 }
 
 // Fonction pour afficher la quantité et le prix
