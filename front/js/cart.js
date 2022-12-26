@@ -95,11 +95,13 @@ function affichageCanape(obj) {
     inputQuantite.setAttribute('min','1');
     inputQuantite.setAttribute('max','100');
     inputQuantite.setAttribute('value', obj.quantity);
+    inputQuantite.addEventListener("input", () => gererQuantitePrix(obj.id, inputQuantite.value, obj))
     divQuantite.appendChild(inputQuantite);
 
 // Création d'une Div pour la suppression
     const divSupp = document.createElement('div');
     divSupp.classList.add("cart__item__content__settings__delete");
+    divSupp.addEventListener("click",() => supprimeCanape(obj));
     divQuantite.appendChild(divSupp);
 
 // Création d'une balise p pour supprimer
@@ -112,13 +114,15 @@ function affichageCanape(obj) {
 
 // Fonction qui permet de savoir si notre panier est vide, si il est vide alors on affiche panier vide sinon,
 // on gère la quantité et le prix
-function calculQuantitePrix() {
+function quantitePrix() {
+    let prixTotal = 0
+    let quantiteTotal = 0
     if (tableauObjet == null) {
         const creationP = document.createElement('p');
         creationP.textContent = 'Votre panier est vide';
         positionDetail.appendChild(creationP);
     } else { 
-        // On gère la quantité et le prix
+        // On calcul la quantité et le prix
         tableauObjet.forEach((obj) => {
             fetch("http://localhost:3000/api/products/" + obj.id)
             .then(function(res) {
@@ -127,367 +131,54 @@ function calculQuantitePrix() {
                 }
             })
             .then(function(cnp) {
-                afficheQuantitePrix(cnp)
+                prixTotal = prixTotal + calculPrix(cnp, obj);
+                quantiteTotal = quantiteTotal + obj.quantity;
+                affichageQuantitePrix(prixTotal, quantiteTotal)
             }); 
         }) 
     }
 }
-calculQuantitePrix();
+quantitePrix();
 
-function afficheQuantitePrix(cnp) {
-    let totalQ = 0;
+// Fonction calcul prix
+function calculPrix(cnp, obj) { 
+    let prixTotalArticle = 0; 
+    prixTotalArticle = cnp.price * obj.quantity;
+    return prixTotalArticle;
+}
+
+// Fonction pour afficher la quantité et le prix
+function affichageQuantitePrix(prixTotal, quantiteTotal) {
     const totalQuantite = document.querySelector("#totalQuantity");
-    let prixTotalArticle = 0;
     const totalPrix = document.querySelector("#totalPrice");
-    
-    tableauObjet.forEach((obj) => {
-        totalQ = totalQ + obj.quantity;
-        prixTotalArticle = prixTotalArticle + (cnp.price * obj.quantity);
-    })
-    console.log(prixTotalArticle)
-    console.log(cnp.price)
-        
-    totalPrix.textContent = prixTotalArticle;
-    totalQuantite.textContent = totalQ;
-}
-changeQuantitePrix()
-
-// Fonction pour modifier la quantité et le prix
-function changeQuantitePrix() {
+    totalPrix.textContent = prixTotal;
+    totalQuantite.textContent = quantiteTotal;
 }
 
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Fonction qui gère la quantité 
+function gererQuantitePrix(id, nouvelleValeur, obj) {
+    const miseAJour = tableauObjet.find((obj) => obj.id === id);
+    miseAJour.quantity = Number(nouvelleValeur);
+    majLocal(obj);
+    quantitePrix();
+}
+
+// Fonction qui met à jour le Local Storage par rapport à la fonction gererQuantitePrix
+function majLocal(obj) {
+        const majLocastorage = JSON.stringify(obj);
+        localStorage.setItem(obj.id +";"+ obj.color , majLocastorage);
+        window.location.reload();
+}
+
+// Fonction qui supprime un article du panier et du local storage
+function supprimeCanape(obj) {
+    const supprimeArticle = tableauObjet.find((canape) => canape.id === obj.id && canape.color === obj.color);
+    tableauObjet.splice(supprimeArticle, 1);
+
+    const majLocasto = JSON.stringify(obj);
+    localStorage.removeItem(obj.id +";"+ obj.color , majLocasto);
+    window.location.reload();
+}
 
 
 
