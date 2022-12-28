@@ -202,7 +202,7 @@ function envoiFormulaire(e) {
     if (formulaireInvalide()) {
         return
     }
-    if (emailErreur()) {
+    if (erreurFormulaire()) {
         return
     }
     const corpsFormulaire = corpsDuFormulaire();
@@ -272,7 +272,7 @@ function formulaireInvalide() {
     })
 }
 // Fonction si il y a une erreur dans un des champs
-function emailErreur() {
+function erreurFormulaire() {
     let formulaire = document.querySelector(".cart__order__form");
 
     // création de regexp pour gérer le formulaire
@@ -287,6 +287,7 @@ function emailErreur() {
         if (prenomNomRegExp.test(valeur)){
             prenom.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre prénom.');
             prenom.textContent = 'Erreur, vérifiez votre prénom.';
         }
     });
@@ -298,6 +299,7 @@ function emailErreur() {
         if (prenomNomRegExp.test(valeur)){
             nom.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre nom.');
             nom.textContent = 'Erreur, vérifiez votre nom.';
         }
     });
@@ -309,6 +311,7 @@ function emailErreur() {
         if (adresseRegExp.test(valeur)){
             adresse.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre adresse.');
             adresse.textContent = 'Erreur, vérifiez votre adresse.';
         }
     });
@@ -320,6 +323,7 @@ function emailErreur() {
         if (prenomNomRegExp.test(valeur)){
             ville.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre ville.');
             ville.textContent = 'Erreur, vérifiez votre ville.';
         }
     });
@@ -331,6 +335,7 @@ function emailErreur() {
         if (emailRegExp.test(valeur)){
             email.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre email.');
             email.textContent = 'Erreur, vérifiez votre email.';
         }
     });

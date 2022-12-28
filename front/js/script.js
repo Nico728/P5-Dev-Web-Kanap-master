@@ -3,17 +3,15 @@
   fetch('http://localhost:3000/api/products')
   .then(function(res) {
     if (res.ok) {
-      console.log(res.json);
       return res.json();
     }
   })
   .then(function(value) {
-    console.table(value);
     kanaps(value);
   })
   .catch(function(err) {
     console.log("erreur 404" + err);
-    document.querySelector("titles").innerHTML = "<h1> erreur 404, not found</h1>";
+    document.querySelector("titles").textContent = "<h1> erreur 404, not found</h1>";
   });
 
  // Affichage des produits 
