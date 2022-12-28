@@ -8,7 +8,6 @@ const tableauObjet = [];
 recuperationLocalStorage();
 tableauObjet.forEach((obj) => affichageCanape(obj));
 
-
 function recuperationLocalStorage() {
     for (let i = 0; i < localStorage.length; i++) {
         const objetAjoute = localStorage.getItem(localStorage.key(i));
@@ -172,9 +171,9 @@ function gererQuantitePrix(id, nouvelleValeur, obj) {
 
 // Fonction qui met à jour le Local Storage par rapport à la fonction gererQuantitePrix
 function majLocal(obj) {
-        const majLocastorage = JSON.stringify(obj);
-        localStorage.setItem(obj.id +";"+ obj.color , majLocastorage);
-        window.location.reload();
+    const majLocastorage = JSON.stringify(obj);
+    localStorage.setItem(obj.id +";"+ obj.color , majLocastorage);
+    window.location.reload();
 }
 
 // Fonction qui supprime un article du panier et du local storage
@@ -188,130 +187,151 @@ function supprimeCanape(obj) {
 }
 
 
-
-/*
 // Formulaire
+const boutonDeCommande = document.querySelector("#order");
+boutonDeCommande.addEventListener("click", (e) => envoiFormulaire(e));
 
-let formulaire = document.querySelector(".cart__order__form");
+// Fonction envoie du formulaire avec fetch post
+function envoiFormulaire(e) {
+    e.preventDefault()
 
-// création de regexp pour gérer le formulaire
-let adresseRegExp = new RegExp("^[A-zà-ú0-9 ,.'\-]+$");
-let prenomNomRegExp = new RegExp("^[A-zà-ú \-]+$");
-let emailRegExp = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
-
-// Champ Prénom
-let prenom = document.querySelector('#firstNameErrorMsg');
-formulaire.firstName.addEventListener('change', function(e) {
-    let valeur = e.target.value;
-    if (prenomNomRegExp.test(valeur)){
-        prenom.textContent = '';
-    } else {
-        prenom.textContent = 'Erreur, vérifiez votre prénom.';
-    }
-});
-
-// Champ Nom
-let nom = document.querySelector('#lastNameErrorMsg');
-formulaire.lastName.addEventListener('change', function(e) {
-    let valeur = e.target.value;
-    if (prenomNomRegExp.test(valeur)){
-        nom.textContent = '';
-    } else {
-        nom.textContent = 'Erreur, vérifiez votre nom.';
-    }
-});
-
-// Champ Adresse
-let adresse = document.querySelector('#addressErrorMsg');
-formulaire.address.addEventListener('change', function(e) {
-    let valeur = e.target.value;
-    if (adresseRegExp.test(valeur)){
-        adresse.textContent = '';
-    } else {
-        adresse.textContent = 'Erreur, vérifiez votre adresse.';
-    }
-});
-
-// Champ Ville
-let ville = document.querySelector('#cityErrorMsg');
-formulaire.city.addEventListener('change', function(e) {
-    let valeur = e.target.value;
-    if (prenomNomRegExp.test(valeur)){
-        ville.textContent = '';
-    } else {
-        ville.textContent = 'Erreur, vérifiez votre ville.';
-    }
-});
-
-// Champ Email
-let email = document.querySelector('#emailErrorMsg');
-formulaire.email.addEventListener('change', function(e) {
-    let valeur = e.target.value;
-    if (emailRegExp.test(valeur)){
-        email.textContent = '';
-    } else {
-        email.textContent = 'Erreur, vérifiez votre email.';
-    }
-});
-
-
-// Bouton COMMANDER !
-
-const boutonCommander = document.querySelector("#order");
-
-boutonCommander.addEventListener('click', function(e) {
-    e.preventDefault();
-    let champPrenom = document.getElementById('firstName');
-    let champNom = document.getElementById('lastName');
-    let champAdresse = document.getElementById('address');
-    let champVille = document.getElementById('city');
-    let champEmail = document.getElementById('email');
-
-    if (tableauObjet == null) {
+    if (tableauObjet.length === 0) {
         alert("Votre panier est vide");
-        e.preventDefault();
     }
-    if (firstName.value === "" || lastName.value === "" || address.value === "" || city.value === "" || email.value === "") {
-        alert("Formulaire non rempli");
-        e.preventDefault();
-    }
-    if (prenomNomRegExp.test(champPrenom.value) ==  false || prenomNomRegExp.test(champNom.value) ==  false || adresseRegExp.test(champAdresse.value) ==  false || prenomNomRegExp.test(champVille.value) ==  false || emailRegExp.test(champEmail.value) ==  false) {
-        alert("Vérifiez vos données saisies dans le formulaire");
-        e.preventDefault();
-    }
-    else {
-        productID = []
-        for (let i = 0; i < localStorage.length; i++) {
-            const objetAjoute = localStorage.getItem(localStorage.key(i).id);
-            const parseObjetAjoute = JSON.parse(objetAjoute);
-            productID.push(parseObjetAjoute);
-        }
 
-        let objetFormulaire = {
-            contact : {
-                firstName: champPrenom.value,
-                lastName: champNom.value,
-                address: champAdresse.value,
-                city: champVille.value,
-                email: champEmail.value,
-            },
-        products: productID    
-        }
-
-        fetch("http://localhost:3000/api/products/order", {
-            method: 'POST',
-            body: JSON.stringify(order),
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'application/json' 
-                },
-            })
-            .then((response) => response.json())
-            .then(async function (resultatCommande) {
-                objetFormulaire = await resultatCommande;
-                document.location.href = "confirmation.html?orderId=" + objetFormulaire.orderId;
-                localStorage.clear();
-            })
+    if (formulaireInvalide()) {
+        return
     }
-})
-*/
+    if (emailErreur()) {
+        return
+    }
+    const corpsFormulaire = corpsDuFormulaire();
+    fetch("http://localhost:3000/api/products/order", {
+        method: 'POST',
+        body: JSON.stringify(corpsFormulaire),
+        headers: {  
+            'Accept': 'application/json',
+            'Content-Type': 'application/json' 
+        },
+    })
+    .then(function(res) {
+        if(res.ok) {
+            return res.json();
+        }
+    })
+    .then(function(data) {
+        const orderId = data.orderId
+        document.location.href = "confirmation.html?orderId=" + orderId;
+        localStorage.clear();
+    });
+}
+
+// Fonction  avec création objet formulaire
+function corpsDuFormulaire() {
+    const formulaire = document.querySelector(".cart__order__form");
+    const firstName = formulaire.elements.firstName.value;
+    const lastName = formulaire.elements.lastName.value;
+    const address = formulaire.elements.address.value;
+    const city = formulaire.elements.city.value;
+    const email = formulaire.elements.email.value;
+
+    let objetFormulaire = {
+        contact : {
+            firstName: firstName,
+            lastName: lastName,
+            address: address,
+            city: city,
+            email: email,
+        },
+        products: recuperationFormulaireId()
+    }
+    return objetFormulaire;
+}
+
+// Fonction qui recupere le numero du canape
+function recuperationFormulaireId() {
+    const numeroCanape = localStorage.length;
+    const numeros = [];
+    for (let i = 0; i < numeroCanape; i++) {
+        const key = localStorage.key(i);
+        const id = key.split(";")[0];
+        numeros.push(id);
+    }
+    return numeros;
+}
+// Fonction si il manque un champs de saisi
+function formulaireInvalide() {  
+    const formulaire = document.querySelector(".cart__order__form");
+    const input = formulaire.querySelectorAll("input");
+    input.forEach((input) => {
+        if (input.value === "") {
+            alert("Veuillez remplir le formulaire")
+            return true;
+        }
+        return false;
+    })
+}
+// Fonction si il y a une erreur dans un des champs
+function emailErreur() {
+    let formulaire = document.querySelector(".cart__order__form");
+
+    // création de regexp pour gérer le formulaire
+    let adresseRegExp = new RegExp("^[A-zà-ú0-9 ,.'\-]+$");
+    let prenomNomRegExp = new RegExp("^[A-zà-ú \-]+$");
+    let emailRegExp = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
+
+    // Champ Prénom
+    let prenom = document.querySelector('#firstNameErrorMsg');
+    formulaire.firstName.addEventListener('change', function(e) {
+        let valeur = e.target.value;
+        if (prenomNomRegExp.test(valeur)){
+            prenom.textContent = '';
+        } else {
+            prenom.textContent = 'Erreur, vérifiez votre prénom.';
+        }
+    });
+
+    // Champ Nom
+    let nom = document.querySelector('#lastNameErrorMsg');
+    formulaire.lastName.addEventListener('change', function(e) {
+        let valeur = e.target.value;
+        if (prenomNomRegExp.test(valeur)){
+            nom.textContent = '';
+        } else {
+            nom.textContent = 'Erreur, vérifiez votre nom.';
+        }
+    });
+
+    // Champ Adresse
+    let adresse = document.querySelector('#addressErrorMsg');
+    formulaire.address.addEventListener('change', function(e) {
+        let valeur = e.target.value;
+        if (adresseRegExp.test(valeur)){
+            adresse.textContent = '';
+        } else {
+            adresse.textContent = 'Erreur, vérifiez votre adresse.';
+        }
+    });
+
+    // Champ Ville
+    let ville = document.querySelector('#cityErrorMsg');
+    formulaire.city.addEventListener('change', function(e) {
+        let valeur = e.target.value;
+        if (prenomNomRegExp.test(valeur)){
+            ville.textContent = '';
+        } else {
+            ville.textContent = 'Erreur, vérifiez votre ville.';
+        }
+    });
+
+    // Champ Email
+    let email = document.querySelector('#emailErrorMsg');
+    formulaire.email.addEventListener('change', function(e) {
+        let valeur = e.target.value;
+        if (emailRegExp.test(valeur)){
+            email.textContent = '';
+        } else {
+            email.textContent = 'Erreur, vérifiez votre email.';
+        }
+    });
+}

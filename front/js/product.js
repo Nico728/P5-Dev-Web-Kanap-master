@@ -2,14 +2,13 @@
 
 const searchParams = new URLSearchParams(window.location.search);
 const urlId = searchParams.get("_id");
-console.log(urlId);
+
 
 // Récupération des détails du produit
 
 fetch("http://localhost:3000/api/products/" + urlId)
     .then(function(res) {
         if(res.ok) {
-            console.log(res.json);
             return res.json();
         }
     })
