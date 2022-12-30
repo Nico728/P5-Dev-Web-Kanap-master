@@ -194,7 +194,7 @@ boutonDeCommande.addEventListener("click", (e) => envoiFormulaire(e));
 // Fonction envoie du formulaire avec fetch post
 function envoiFormulaire(e) {
     e.preventDefault()
-
+    const corpsFormulaire = corpsDuFormulaire();
     if (tableauObjet.length === 0) {
         alert("Votre panier est vide");
     }
@@ -205,7 +205,7 @@ function envoiFormulaire(e) {
     if (erreurFormulaire()) {
         return
     }
-    const corpsFormulaire = corpsDuFormulaire();
+    else {
     fetch("http://localhost:3000/api/products/order", {
         method: 'POST',
         body: JSON.stringify(corpsFormulaire),
@@ -224,6 +224,7 @@ function envoiFormulaire(e) {
         document.location.href = "confirmation.html?orderId=" + orderId;
         localStorage.clear();
     });
+}
 }
 
 // Fonction  avec création objet formulaire
@@ -265,10 +266,8 @@ function formulaireInvalide() {
     const input = formulaire.querySelectorAll("input");
     input.forEach((input) => {
         if (input.value === "") {
-            alert("Veuillez remplir le formulaire")
-            return true;
+            alert("Veuillez remplir le formulaire") 
         }
-        return false;
     })
 }
 // Fonction si il y a une erreur dans un des champs
@@ -287,7 +286,6 @@ function erreurFormulaire() {
         if (prenomNomRegExp.test(valeur)){
             prenom.textContent = '';
         } else {
-            alert('Erreur, vérifiez votre prénom.');
             prenom.textContent = 'Erreur, vérifiez votre prénom.';
         }
     });
@@ -299,7 +297,6 @@ function erreurFormulaire() {
         if (prenomNomRegExp.test(valeur)){
             nom.textContent = '';
         } else {
-            alert('Erreur, vérifiez votre nom.');
             nom.textContent = 'Erreur, vérifiez votre nom.';
         }
     });
@@ -311,7 +308,6 @@ function erreurFormulaire() {
         if (adresseRegExp.test(valeur)){
             adresse.textContent = '';
         } else {
-            alert('Erreur, vérifiez votre adresse.');
             adresse.textContent = 'Erreur, vérifiez votre adresse.';
         }
     });
@@ -323,7 +319,6 @@ function erreurFormulaire() {
         if (prenomNomRegExp.test(valeur)){
             ville.textContent = '';
         } else {
-            alert('Erreur, vérifiez votre ville.');
             ville.textContent = 'Erreur, vérifiez votre ville.';
         }
     });
@@ -335,7 +330,6 @@ function erreurFormulaire() {
         if (emailRegExp.test(valeur)){
             email.textContent = '';
         } else {
-            alert('Erreur, vérifiez votre email.');
             email.textContent = 'Erreur, vérifiez votre email.';
         }
     });
