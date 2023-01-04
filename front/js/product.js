@@ -85,13 +85,13 @@ function verifieContenuStorage(canape) {
     if (locaSto == null){
         // alors on stoke les cles id et colors en chaines de caractere du canape
         localStorage.setItem(canape.id +";"+ canape.color, JSON.stringify(canape));
-        alert("article ajouté au panier");
+        alert("Article ajouté au panier");
     //sinon 
     }else{
         // creation d'une variable qui parse la variable locaSto si id et la couleur sont deja selectionnée
         let doubleArt = JSON.parse(locaSto);
         doubleArt.quantity += canape.quantity;
         localStorage.setItem(doubleArt.id +";"+ doubleArt.color, JSON.stringify(doubleArt));
-        alert("article ajouté au panier");
+        alert("Article ajouté au panier");
     }
 }
