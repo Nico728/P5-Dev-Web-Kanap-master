@@ -58,11 +58,8 @@ function bouton(data) {
         const quantiteCanape = document.querySelector("#quantity").value;
         const choixCouleur = document.querySelector("#colors").value;
 
-        if (choixCouleur === "") {
-            alert("Veuillez sélectionner une couleur");
-        } 
-        if (quantiteCanape == 0) {
-            alert("Veuillez sélectionner une quantité");
+        if (choixCouleur === "" || quantiteCanape == 0) {
+            alert("Veuillez sélectionner une couleur et/ou une quantité");
         } 
         else {
             let canape = {
