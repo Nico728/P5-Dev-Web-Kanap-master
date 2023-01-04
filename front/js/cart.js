@@ -94,7 +94,7 @@ function affichageCanape(obj) {
     inputQuantite.setAttribute('min','1');
     inputQuantite.setAttribute('max','100');
     inputQuantite.setAttribute('value', obj.quantity);
-    inputQuantite.addEventListener("input", () => gererQuantitePrix(obj.id, inputQuantite.value, obj))
+    inputQuantite.addEventListener("input", () => gererQuantitePrix(obj.id, inputQuantite.value, obj, obj.color))
     divQuantite.appendChild(inputQuantite);
 
 // Création d'une Div pour la suppression
@@ -162,8 +162,8 @@ function affichageQuantitePrix(prixTotal, quantiteTotal) {
 }
 
 // Fonction qui gère la quantité 
-function gererQuantitePrix(id, nouvelleValeur, obj) {
-    const miseAJour = tableauObjet.find((obj) => obj.id === id);
+function gererQuantitePrix(id, nouvelleValeur, obj, color) {
+    const miseAJour = tableauObjet.find((obj) => obj.id === id && obj.color === color);
     miseAJour.quantity = Number(nouvelleValeur);
     majLocal(obj);
     quantitePrix();
@@ -192,20 +192,23 @@ const boutonDeCommande = document.querySelector("#order");
 boutonDeCommande.addEventListener("click", (e) => envoiFormulaire(e));
 
 // Fonction envoie du formulaire avec fetch post
-function envoiFormulaire(e) {
-    e.preventDefault()
-    const corpsFormulaire = corpsDuFormulaire();
+function envoiFormulaire() {
+    
     if (tableauObjet.length === 0) {
         alert("Votre panier est vide");
     }
 
-    if (formulaireInvalide()) {
-        return
-    }
     if (erreurFormulaire()) {
-        return
+        return;
     }
     else {
+        formulaireValide();
+    }
+}
+
+// Fonction si le formulaire est bon alors on fetch
+function formulaireValide() {
+    const corpsFormulaire = corpsDuFormulaire();
     fetch("http://localhost:3000/api/products/order", {
         method: 'POST',
         body: JSON.stringify(corpsFormulaire),
@@ -222,9 +225,8 @@ function envoiFormulaire(e) {
     .then(function(data) {
         const orderId = data.orderId
         document.location.href = "confirmation.html?orderId=" + orderId;
-        localStorage.clear();
+        //localStorage.clear();
     });
-}
 }
 
 // Fonction  avec création objet formulaire
@@ -260,16 +262,7 @@ function recuperationFormulaireId() {
     }
     return numeros;
 }
-// Fonction si il manque un champs de saisi
-function formulaireInvalide() {  
-    const formulaire = document.querySelector(".cart__order__form");
-    const input = formulaire.querySelectorAll("input");
-    input.forEach((input) => {
-        if (input.value === "") {
-            alert("Veuillez remplir le formulaire") 
-        }
-    })
-}
+
 // Fonction si il y a une erreur dans un des champs
 function erreurFormulaire() {
     let formulaire = document.querySelector(".cart__order__form");
@@ -286,6 +279,7 @@ function erreurFormulaire() {
         if (prenomNomRegExp.test(valeur)){
             prenom.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre prénom.');
             prenom.textContent = 'Erreur, vérifiez votre prénom.';
         }
     });
@@ -297,6 +291,7 @@ function erreurFormulaire() {
         if (prenomNomRegExp.test(valeur)){
             nom.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre nom.');
             nom.textContent = 'Erreur, vérifiez votre nom.';
         }
     });
@@ -308,6 +303,7 @@ function erreurFormulaire() {
         if (adresseRegExp.test(valeur)){
             adresse.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre adresse.');
             adresse.textContent = 'Erreur, vérifiez votre adresse.';
         }
     });
@@ -319,6 +315,7 @@ function erreurFormulaire() {
         if (prenomNomRegExp.test(valeur)){
             ville.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre ville.');
             ville.textContent = 'Erreur, vérifiez votre ville.';
         }
     });
@@ -330,7 +327,12 @@ function erreurFormulaire() {
         if (emailRegExp.test(valeur)){
             email.textContent = '';
         } else {
+            alert('Erreur, vérifiez votre email.');
             email.textContent = 'Erreur, vérifiez votre email.';
         }
     });
+
+    if (firstName.value === "" || lastName.value === "" || address.value === "" || city.value === "" || email.value === "") {
+        alert("Veuillez remplir le formulaire");
+    }
 }
