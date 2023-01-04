@@ -191,7 +191,7 @@ function supprimeCanape(obj) {
 const boutonDeCommande = document.querySelector("#order");
 boutonDeCommande.addEventListener("click", (e) => envoiFormulaire(e));
 
-// Fonction envoie du formulaire avec fetch post
+// Fonction envoie du formulaire
 function envoiFormulaire() {
     
     if (tableauObjet.length === 0) {
