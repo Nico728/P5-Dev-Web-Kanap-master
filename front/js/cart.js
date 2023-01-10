@@ -189,7 +189,7 @@ function supprimeCanape(obj) {
 
 // Formulaire
 const boutonDeCommande = document.querySelector("#order");
-boutonDeCommande.addEventListener("click", (e) => envoiFormulaire(e));
+boutonDeCommande.addEventListener("click", () => envoiFormulaire());
 
 // Fonction envoie du formulaire
 function envoiFormulaire() {
@@ -198,9 +198,10 @@ function envoiFormulaire() {
         alert("Votre panier est vide");
     }
 
-    if (erreurFormulaire()) {
-        return;
+    if (erreurPrenom() || erreurNom() || erreurAdresse() || erreurVille() || erreurEmail()){
+        return
     }
+
     else {
         formulaireValide();
     }
@@ -225,7 +226,7 @@ function formulaireValide() {
     .then(function(data) {
         const orderId = data.orderId
         document.location.href = "confirmation.html?orderId=" + orderId;
-        //localStorage.clear();
+        localStorage.clear();
     });
 }
 
@@ -263,76 +264,78 @@ function recuperationFormulaireId() {
     return numeros;
 }
 
-// Fonction si il y a une erreur dans un des champs
-function erreurFormulaire() {
-    let formulaire = document.querySelector(".cart__order__form");
-
-    // création de regexp pour gérer le formulaire
-    let adresseRegExp = new RegExp("^[A-zà-ú0-9 ,.'\-]+$");
-    let prenomNomRegExp = new RegExp("^[A-zà-ú \-]+$");
-    let emailRegExp = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
-
-    // Champ Prénom
-    let prenom = document.querySelector('#firstNameErrorMsg');
-    formulaire.firstName.addEventListener('change', function(e) {
-        let valeur = e.target.value;
-        if (prenomNomRegExp.test(valeur)){
-            prenom.textContent = '';
-        } else {
-            alert('Erreur, vérifiez votre prénom.');
-            prenom.textContent = 'Erreur, vérifiez votre prénom.';
-        }
-    });
-
-    // Champ Nom
-    let nom = document.querySelector('#lastNameErrorMsg');
-    formulaire.lastName.addEventListener('change', function(e) {
-        let valeur = e.target.value;
-        if (prenomNomRegExp.test(valeur)){
-            nom.textContent = '';
-        } else {
-            alert('Erreur, vérifiez votre nom.');
-            nom.textContent = 'Erreur, vérifiez votre nom.';
-        }
-    });
-
-    // Champ Adresse
-    let adresse = document.querySelector('#addressErrorMsg');
-    formulaire.address.addEventListener('change', function(e) {
-        let valeur = e.target.value;
-        if (adresseRegExp.test(valeur)){
-            adresse.textContent = '';
-        } else {
-            alert('Erreur, vérifiez votre adresse.');
-            adresse.textContent = 'Erreur, vérifiez votre adresse.';
-        }
-    });
-
-    // Champ Ville
-    let ville = document.querySelector('#cityErrorMsg');
-    formulaire.city.addEventListener('change', function(e) {
-        let valeur = e.target.value;
-        if (prenomNomRegExp.test(valeur)){
-            ville.textContent = '';
-        } else {
-            alert('Erreur, vérifiez votre ville.');
-            ville.textContent = 'Erreur, vérifiez votre ville.';
-        }
-    });
-
-    // Champ Email
-    let email = document.querySelector('#emailErrorMsg');
-    formulaire.email.addEventListener('change', function(e) {
-        let valeur = e.target.value;
-        if (emailRegExp.test(valeur)){
-            email.textContent = '';
-        } else {
-            alert('Erreur, vérifiez votre email.');
-            email.textContent = 'Erreur, vérifiez votre email.';
-        }
-    });
-
-    if (firstName.value === "" || lastName.value === "" || address.value === "" || city.value === "" || email.value === "") {
-        alert("Veuillez remplir le formulaire");
+// Fonction si il y a une erreur dans le prénom
+function erreurPrenom() {
+    const prenom = document.querySelector("#firstName").value;
+    const regex = /^[A-zà-ú \-]+$/;
+    if (firstName.value === "") {
+        alert("Formulaire incomplet");
     }
+    if (regex.test(prenom) === false) {
+        const prenomText = document.querySelector("#firstNameErrorMsg");
+        prenomText.textContent = 'Erreur, vérifiez votre prénom.';
+        return true;
+    }
+    return false;
+
+}
+
+// Fonction si il y a une erreur dans le nom
+function erreurNom() {
+    const nom = document.querySelector("#lastName").value;
+    const regex = /^[A-zà-ú \-]+$/;
+    if (lastName.value === "") {
+        alert("Formulaire incomplet");
+    }
+    if (regex.test(nom) === false) {
+        const nomText = document.querySelector("#lastNameErrorMsg");
+        nomText.textContent = 'Erreur, vérifiez votre nom.';
+        return true;
+    }
+    return false;
+}
+
+// Fonction si il y a une erreur dans l'adresse
+function erreurAdresse() {
+    const adresse = document.querySelector("#address").value;
+    const regex = /^[A-zà-ú0-9 ,.'\-]+$/;
+    if (address.value === "") {
+        alert("Formulaire incomplet");
+    }
+    if (regex.test(adresse) === false) {
+        const adresseText = document.querySelector("#addressErrorMsg");
+        adresseText.textContent = 'Erreur, vérifiez votre adresse.';
+        return true;
+    }
+    return false;
+}
+
+// Fonction si il y a une erreur dans la ville
+function erreurVille() {
+    const ville = document.querySelector("#city").value;
+    const regex = /^[A-zà-ú \-]+$/;
+    if (city.value === "") {
+        alert("Formulaire incomplet");
+    }
+    if (regex.test(ville) === false) {
+        const villeText = document.querySelector("#cityErrorMsg");
+        villeText.textContent = 'Erreur, vérifiez votre ville.';
+        return true;
+    }
+    return false;
+}
+
+// Fonction si il y a une erreur dans l'email
+function erreurEmail() {
+    const emailCase = document.querySelector("#email").value;
+    const regex = /^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$/;
+    if (email.value === "") {
+        alert("Formulaire incomplet");
+    }
+    if (regex.test(emailCase) === false) {
+        const emailText = document.querySelector("#emailErrorMsg");
+        emailText.textContent = 'Erreur, vérifiez votre email.';
+        return true;
+    }
+    return false;
 }
