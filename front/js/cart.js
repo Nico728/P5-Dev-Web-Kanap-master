@@ -310,6 +310,7 @@ function erreurAdresse() {
     return false;
 }
 
+
 // Fonction si il y a une erreur dans la ville
 function erreurVille() {
     const ville = document.querySelector("#city").value;
