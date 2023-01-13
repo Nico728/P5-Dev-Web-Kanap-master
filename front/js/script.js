@@ -11,7 +11,8 @@
   })
   .catch(function(err) {
     console.log("erreur 404" + err);
-    document.querySelector("titles").textContent = "<h1> erreur 404, not found</h1>";
+    let erreurKnap = document.createElement("p");
+    document.querySelector("titles").textContent = "erreur 404, not found".appendChild(erreurKnap);
   });
 
  // Affichage des produits 
