@@ -55,10 +55,10 @@ function afficheDetail(data) {
 function bouton(data) {
     const boutonAjout = document.querySelector("#addToCart");
     boutonAjout.addEventListener("click", function() {
-        const quantiteCanape = document.querySelector("#quantity").value;
+        const quantiteCanape = document.querySelector("input").value;
         const choixCouleur = document.querySelector("#colors").value;
-
-        if (choixCouleur === "" || quantiteCanape == 0) {
+      
+        if (choixCouleur === "" || quantiteCanape <= 0) {
             alert("Veuillez sélectionner une couleur et/ou une quantité");
         } 
         else {

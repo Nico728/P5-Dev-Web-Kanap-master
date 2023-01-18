@@ -94,7 +94,7 @@ function affichageCanape(obj) {
     inputQuantite.setAttribute('min','1');
     inputQuantite.setAttribute('max','100');
     inputQuantite.setAttribute('value', obj.quantity);
-    inputQuantite.addEventListener("input", () => gererQuantitePrix(obj.id, inputQuantite.value, obj, obj.color))
+    inputQuantite.addEventListener("input", () => gererQuantitePrix(obj.id, inputQuantite.value, obj, obj.color));
     divQuantite.appendChild(inputQuantite);
 
 // Création d'une Div pour la suppression
@@ -193,11 +193,6 @@ boutonDeCommande.addEventListener("click", () => envoiFormulaire());
 
 // Fonction envoie du formulaire
 function envoiFormulaire() {
-    
-    if (tableauObjet.length === 0) {
-        alert("Votre panier est vide");
-    }
-
     if (erreurPrenom() || erreurNom() || erreurAdresse() || erreurVille() || erreurEmail()){
         return
     }
@@ -209,25 +204,31 @@ function envoiFormulaire() {
 
 // Fonction si le formulaire est bon alors on fetch
 function formulaireValide() {
-    const corpsFormulaire = corpsDuFormulaire();
-    fetch("http://localhost:3000/api/products/order", {
-        method: 'POST',
-        body: JSON.stringify(corpsFormulaire),
-        headers: {  
-            'Accept': 'application/json',
-            'Content-Type': 'application/json' 
-        },
-    })
-    .then(function(res) {
-        if(res.ok) {
-            return res.json();
-        }
-    })
-    .then(function(data) {
-        const orderId = data.orderId
-        document.location.href = "confirmation.html?orderId=" + orderId;
-        localStorage.clear();
-    });
+    if (tableauObjet.length === 0) {
+        alert("Votre panier est vide");
+    }
+    
+    else {
+        const corpsFormulaire = corpsDuFormulaire();
+        fetch("http://localhost:3000/api/products/order", {
+            method: 'POST',
+            body: JSON.stringify(corpsFormulaire),
+            headers: {  
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' 
+            },
+        })
+        .then(function(res) {
+            if(res.ok) {
+                return res.json();
+            }
+        })
+        .then(function(data) {
+            const orderId = data.orderId
+            document.location.href = "confirmation.html?orderId=" + orderId;
+            localStorage.clear();
+        });
+    }
 }
 
 // Fonction  avec création objet formulaire
